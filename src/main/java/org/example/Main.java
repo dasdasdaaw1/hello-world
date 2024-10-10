@@ -1,15 +1,28 @@
 package org.example;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Хеллоу Ворлд");
-        Student s1 = new Student("Petya");
-        Student s2 = new Student("Sanya");
-        Student.study();
-        System.out.println(s1.greeting());
-        System.out.println(s2.greeting());
-    }
+        try {
+            // Отправляем GET-запрос и получаем HTML
+            Document doc = Jsoup.connect("https://magnit.ru/catalog?shopCode=992301")
+                    .userAgent("Mozilla/5.0")
+                    .timeout(5000)
+                    .get();
 
+            // Записываем содержимое в файл с помощью NIO (Files.write)
+            Files.write(Paths.get("output.html"), doc.html().getBytes());
+
+            System.out.println("HTML содержимое успешно записано в файл");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
